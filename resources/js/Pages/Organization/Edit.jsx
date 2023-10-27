@@ -8,11 +8,12 @@ import { useForm, usePage } from '@inertiajs/react';
 
 const Edit = () => {
 
-    const {id, name, location, member} = usePage().props.organization;
+    const {id, name, location, member, category} = usePage().props.organization;
     const { data, setData, put, processing, errors, reset } = useForm({
         name: name,
         location: location,
         member: member,
+        category : category,
     });
 
     const submit = (e) => {
@@ -36,6 +37,21 @@ const Edit = () => {
                             onChange={(e) => setData('name', e.target.value)}
                         />
                         <InputError message={errors.name} className="mt-2" />
+                    </div>
+                    <div className="mt-4">
+                        <InputLabel htmlFor="category" value="Category" />
+                        <select
+                            id="category"
+                            name="category"
+                            value={data.category}
+                            onChange={(e) => setData('category', e.target.value)}
+                            className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                        >
+                            <option value="front-end">Front End Developer</option>
+                            <option value="back-end">Back End Developer</option>
+                            <option value="design">Designer</option>
+                        </select>
+                        <InputError message={errors.category} className="mt-2" />
                     </div>
                     <div className="mt-4">
                         <InputLabel htmlFor="location" value="Location" />

@@ -8,19 +8,16 @@ import Swal from 'sweetalert2';
 
 const Index = () => {
 
-    const {organizations} = usePage().props;
-    const { flash } = usePage().props;
+    const {organizations, flash} = usePage().props;
 
     useEffect(() => {
         if (flash.message) {
             toast.success(flash.message, {
-                position: 'top-right',
-                autoClose: 3000,
+                position: 'top-right'
             })
         }
     }, [flash]);
 
-    
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -33,18 +30,13 @@ const Index = () => {
             confirmButtonText: 'Yes, delete it!',
         }).then((result) => {
             if (result.isConfirmed) {
-                // Inertia.delete(`/organizations/${id}`, {
-                //     preserveState: true,
-                // }).then(() => {
-                //     Swal.fire('Deleted!', 'Your organization has been deleted.', 'success');
-                // });
                 router.delete(`/organizations/${id}`);
             }
         });
     }
 
     return (
-        <div className="py-12 max-w-xl mx-auto">
+        <div className="py-12 max-w-2xl mx-auto">
             <ToastContainer></ToastContainer>
             <PrimaryButton className="mb-4">
                 <Link href={route('organizations.create')} >Add Organization</Link>
@@ -56,6 +48,7 @@ const Index = () => {
                         <th className="border border-slate-600 p-4">Name</th>
                         <th className="border border-slate-600 p-4">Location</th>
                         <th className="border border-slate-600 p-4">Member</th>
+                        <th className="border border-slate-600 p-4">Department</th>
                         <th className="border border-slate-600 p-4">Action</th>
                     </tr>
                 </thead>
@@ -65,6 +58,7 @@ const Index = () => {
                             <td className="border border-slate-600 p-4">{item.name}</td>
                             <td className="border border-slate-600 p-4">{item.location}</td>
                             <td className="border border-slate-600 p-4">{item.member}</td>
+                            <td className="border border-slate-600 p-4">{item.category}</td>
                             <td className="border border-slate-600 p-4">
                                 <Link href={route('organizations.edit', item.id)}>Edit</Link>
                                 {' | '}

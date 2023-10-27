@@ -36,6 +36,7 @@ class OrganizationController extends Controller
             'name' => ['required', 'max:50'],
             'location' => ['required', 'max:50'],
             'member' => ['required', 'max:50'],
+            'category' => ['required'],
         ]);
         Organization::create($request->all());
         
@@ -69,6 +70,7 @@ class OrganizationController extends Controller
         'name' => ['required', 'max:50'],
         'location' => ['required', 'max:50'],
         'member' => ['required', 'max:50'],
+        'category' => ['required'],
     ]);
     $organization->update($request->all());
     return redirect()->route('organizations.index')->with('message', 'Organization updated successfully.');

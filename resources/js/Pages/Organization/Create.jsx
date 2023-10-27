@@ -12,6 +12,7 @@ const Create = () => {
         name: '',
         location: '',
         member: '',
+        category: '',
     });
 
     const submit = (e) => {
@@ -27,7 +28,7 @@ const Create = () => {
             <div className="max-w-lg mx-auto bg-gray-100 p-10 rounded">
                 <form onSubmit={submit}>
                     <div>
-                        <InputLabel htmlFor="name" value="Organization Name" />
+                        <InputLabel htmlFor="name" value="Name" />
                         <TextInput
                             id="name"
                             name="name"
@@ -40,6 +41,22 @@ const Create = () => {
                         <InputError message={errors.name} className="mt-2" />
                     </div>
                     <div className="mt-4">
+                        <InputLabel htmlFor="category" value="Category" />
+                        <select
+                            id="category"
+                            name="category"
+                            value={data.category}
+                            onChange={(e) => setData('category', e.target.value)}
+                            className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                        >
+                            <option value="">Select a category</option>
+                            <option value="front-end">Front End Developer</option>
+                            <option value="back-end">Back End Developer</option>
+                            <option value="design">Designer</option>
+                        </select>
+                        <InputError message={errors.category} className="mt-2" />
+                    </div>
+                    <div className="mt-4">
                         <InputLabel htmlFor="location" value="Location" />
                         <TextInput
                             id="location"
@@ -49,7 +66,6 @@ const Create = () => {
                             autoComplete="location"
                             isFocused={true}
                             onChange={(e) => setData('location', e.target.value)}
-                            
                         />
                         <InputError message={errors.location} className="mt-2" />
                     </div>
