@@ -38,10 +38,15 @@ const Index = () => {
     }
 
     useEffect(() => {
-        router.get(route(route().current()), { search: query }, {
-            replace: true,
-            preserveState: true
-        });
+        const search = () => {
+            router.get(route(route().current()), { search: query }, {
+                replace: true,
+                preserveState: true
+            });
+        }
+        if (query != ''){
+            search();
+        }
     }, [query]);
 
     return (
@@ -54,7 +59,6 @@ const Index = () => {
                 <div>
                     <input
                         type="text"
-                        value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search..."
                         id="search"
