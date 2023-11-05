@@ -5,17 +5,33 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Organization;
+use App\Http\Requests\organizationRequest;
 
 class OrganizationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $organizations = Organization::latest()->get();
+        $search = $request->input('search');
+
         return Inertia::render('Organization/Index', [
-            'organizations' => $organizations
+            'organizations' => Organization::query()->when($search, fn ($query) => $query->where('name', 'LIKE', "%{$search}%"))->get()
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        $organizations = Organization::where('name', 'LIKE', "%$query%")
+            ->orWhere('location', 'LIKE', "%$query%")
+            ->orWhere('start_date', 'LIKE', "%$query%")
+            ->get();
+
+        return inertia('Organizations/Index', [
+            'organizations' => $organizations,
         ]);
     }
 
@@ -30,15 +46,20 @@ class OrganizationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(organizationRequest $request)
     {
-          $request->validate([
-            'name' => ['required', 'max:50'],
-            'location' => ['required', 'max:50'],
-            'member' => ['required', 'max:50'],
-            'category' => ['required'],
-        ]);
-        Organization::create($request->all());
+        $input = $request->validated();
+       
+        $dataArray = array(
+            'name' => $input['name'],
+            'location' => $input['location'],
+            'start_date' => \Carbon\Carbon::parse($input['start_date'])->format('Y-m-d H:i:s') ?? null,
+            'start_time' => \Carbon\Carbon::parse($input['start_time'])->format('H:i:s') ?? null,
+            'member' => $input['member'],
+            'category' => $input['category'],
+        );
+
+        Organization::create($dataArray);
         
         return redirect()->route('organizations.index')->with('message', 'Organization created successfully.');
     }
@@ -64,15 +85,23 @@ class OrganizationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Organization $organization)
+    public function update(organizationRequest $request, $id)
 {
-    $request->validate([
-        'name' => ['required', 'max:50'],
-        'location' => ['required', 'max:50'],
-        'member' => ['required', 'max:50'],
-        'category' => ['required'],
-    ]);
-    $organization->update($request->all());
+    $input = $request->validated();
+
+       
+        $dataArray = array(
+            'name' => $input['name'],
+            'location' => $input['location'],
+            'start_date' => \Carbon\Carbon::parse($input['start_date'])->format('Y-m-d H:i:s') ?? null,
+            'start_time' => \Carbon\Carbon::parse($input['start_time'])->format('H:i:s') ?? null,
+            'member' => $input['member'],
+            'category' => $input['category'],
+        );
+
+    $organization = Organization::findOrFail($id);  
+
+    $organization->update($dataArray);
     return redirect()->route('organizations.index')->with('message', 'Organization updated successfully.');
 }
 
@@ -91,4 +120,5 @@ class OrganizationController extends Controller
     return redirect()->route('organizations.index')->with('message', 'Organization deleted successfully.');
 
     }
+
 }

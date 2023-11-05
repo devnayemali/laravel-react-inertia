@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../Layout/Layout';
 import { Link, router, usePage } from '@inertiajs/react';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
+import moment from 'moment';
+import { Inertia } from '@inertiajs/inertia';
 
 const Index = () => {
 
-    const {organizations, flash} = usePage().props;
+    const [query, setQuery] = useState('');
+    const { organizations, flash } = usePage().props;
 
     useEffect(() => {
         if (flash.message) {
@@ -17,7 +20,6 @@ const Index = () => {
             })
         }
     }, [flash]);
-
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -35,18 +37,38 @@ const Index = () => {
         });
     }
 
+    useEffect(() => {
+        router.get(route(route().current()), { search: query }, {
+            replace: true,
+            preserveState: true
+        });
+    }, [query]);
+
     return (
         <div className="py-12 max-w-2xl mx-auto">
             <ToastContainer></ToastContainer>
-            <PrimaryButton className="mb-4">
-                <Link href={route('organizations.create')} >Add Organization</Link>
-            </PrimaryButton>
-            
+            <div className="flex justify-between">
+                <PrimaryButton className="mb-4">
+                    <Link href={route('organizations.create')} >Add Organization</Link>
+                </PrimaryButton>
+                <div>
+                    <input
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Search..."
+                        id="search"
+                    />
+                </div>
+            </div>
+
             <table className="table-fixed border-collapse border border-slate-500 border-spacing-2 w-full">
                 <thead>
                     <tr>
                         <th className="border border-slate-600 p-4">Name</th>
                         <th className="border border-slate-600 p-4">Location</th>
+                        <th className="border border-slate-600 p-4">Date</th>
+                        <th className="border border-slate-600 p-4">Time</th>
                         <th className="border border-slate-600 p-4">Member</th>
                         <th className="border border-slate-600 p-4">Department</th>
                         <th className="border border-slate-600 p-4">Action</th>
@@ -57,6 +79,7 @@ const Index = () => {
                         <tr key={item.id}>
                             <td className="border border-slate-600 p-4">{item.name}</td>
                             <td className="border border-slate-600 p-4">{item.location}</td>
+                            <td className="border border-slate-600 p-4">{item?.start_date && moment(item?.start_date).format("MMMM D, YYYY")}</td>
                             <td className="border border-slate-600 p-4">{item.member}</td>
                             <td className="border border-slate-600 p-4">{item.category}</td>
                             <td className="border border-slate-600 p-4">

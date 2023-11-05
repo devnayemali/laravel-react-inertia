@@ -9,5 +9,5 @@ class Organization extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['name', 'location', 'member', 'category'];
+    protected $fillable = ['name', 'start_date', 'start_time', 'location', 'member', 'category'];
 }

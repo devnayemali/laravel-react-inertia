@@ -53,10 +53,10 @@ Route::get('/contact', function() {
 // Organization 
 Route::get('/organizations/create', [OrganizationController::class, 'create'])->name('organizations.create');
 Route::get('/organizations/{organization}/edit', [OrganizationController::class, 'edit'])->name('organizations.edit');
-Route::put('/organizations/{organization}', [OrganizationController::class, 'update'])->name('organizations.update');
+Route::put('/organizations/{id}', [OrganizationController::class, 'update'])->name('organizations.update');
 Route::post('/organizations', [OrganizationController::class, 'store'])->name('organizations.store');
 Route::get('/organizations', [OrganizationController::class, 'index'])->name('organizations.index');
-
 Route::delete('/organizations/{id}', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
+Route::get('/organizations/search', [OrganizationController::class, 'search'])->name('organizations.search');
 
 require __DIR__.'/auth.php';

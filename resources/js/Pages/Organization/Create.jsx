@@ -2,26 +2,36 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../Layout/Layout';
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Create = () => {
 
+    const [startDate, setStartDate] = useState(new Date());
+    const [startTime, setStartTime] = useState(new Date());
+
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
+        start_date: '',
+        start_time : '',
         location: '',
         member: '',
         category: '',
     });
 
+
+
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
+        data.start_date = startDate;
+        data.start_time = startTime;
+        console.log(data.start_time);
         post(route('organizations.index'));
     };
 
-    console.log(errors);
 
     return (
         <div className="py-12">
@@ -39,6 +49,24 @@ const Create = () => {
                             onChange={(e) => setData('name', e.target.value)}
                         />
                         <InputError message={errors.name} className="mt-2" />
+                    </div>
+                    <div className="mt-4">
+                        <InputLabel htmlFor="Date" />
+                        <DatePicker name="start_date" selected={startDate} onChange={(date) => setStartDate(date)} />
+                        <InputError message={errors.start_date} className="mt-2" />
+                    </div>
+                    <div className="mt-4">
+                        <InputLabel htmlFor="Time" />
+                        <DatePicker
+                            selected={startTime}
+                            onChange={(date) => setStartTime(date)}
+                            showTimeSelect
+                            showTimeSelectOnly
+                            timeIntervals={5}
+                            timeCaption="Time"
+                            dateFormat="h:mm aa"
+                        />
+                        <InputError message={errors.start_time} className="mt-2" />
                     </div>
                     <div className="mt-4">
                         <InputLabel htmlFor="category" value="Category" />
@@ -80,7 +108,7 @@ const Create = () => {
                             isFocused={true}
                             onChange={(e) => setData('member', e.target.value)}
                         />
-                        <InputError message={errors.location} className="mt-2" />
+                        <InputError message={errors.member} className="mt-2" />
                     </div>
 
                     <div className="flex items-center mt-4">
