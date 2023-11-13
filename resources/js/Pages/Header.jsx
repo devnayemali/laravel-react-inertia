@@ -6,10 +6,8 @@ const Header = () => {
             <nav>
                 <ul className="flex gap-5 justify-center">
                     <li><Link href="/">Home</Link></li>
-                    <li><Link href="/about">About</Link></li>
-                    <li><Link href="/service">Service</Link></li>
-                    <li><Link href="/contact">Contact</Link></li>
                     <li><Link href={route('organizations.index')}>Organization</Link></li>
+                    <li><Link href={route('student.index')}>Students</Link></li>
                 </ul>
             </nav>
         </div>

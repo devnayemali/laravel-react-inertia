@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\StudentController;
+use App\Models\Student;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -58,5 +60,8 @@ Route::post('/organizations', [OrganizationController::class, 'store'])->name('o
 Route::get('/organizations', [OrganizationController::class, 'index'])->name('organizations.index');
 Route::delete('/organizations/{id}', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
 Route::get('/organizations/search', [OrganizationController::class, 'search'])->name('organizations.search');
+Route::get('/students', [StudentController::class, 'index'])->name('student.index');
+Route::get('/student/create', [StudentController::class, 'create'])->name('student.create');
+Route::get('/students', [StudentController::class, 'search'])->name('student.index');
 
 require __DIR__.'/auth.php';
