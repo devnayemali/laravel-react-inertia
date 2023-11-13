@@ -10,10 +10,37 @@ import "react-datepicker/dist/react-datepicker.css";
 import Checkbox from '@/Components/Checkbox';
 
 const Create = () => {
+
+    const [optionSubject, setOptionSubject] = useState({});
+
     const { data, setData, post, processing, errors } = useForm({
         present_address: '',
         permanent_address: '',
+        optional_subjects: []
     });
+
+    const handleOptionSubject = (subject, isChecked) => {
+        setOptionSubject(prevState => ({
+            ...prevState,
+            [subject]: isChecked
+        }));
+
+        setSubjectInData(subject, isChecked);
+    };
+
+    const setSubjectInData = (subject, isChecked) => {
+        setOptionSubject(prevState => {
+            const updatedSubjects = {
+                ...prevState,
+                [subject]: isChecked
+            };
+
+            const subjectsArray = Object.entries(updatedSubjects).map(([subject, is_option]) => ({ subject, is_option }));
+            setData('optional_subjects', subjectsArray);
+            
+            return updatedSubjects;
+        });
+    };
 
     const handleCheckboxChange = (e) => {
         const isChecked = e.target.checked;
@@ -35,6 +62,24 @@ const Create = () => {
         <div className="py-12">
             <div className="max-w-2xl mx-auto bg-gray-100 p-10 rounded">
                 <form onSubmit={submit}>
+                    <div className="flex gap-6">
+                        <div>
+                            <InputLabel htmlFor="biology" value="Biology" />
+                            <Checkbox
+                                id="biology"
+                                name="biology"
+                                onChange={(e) => handleOptionSubject('biology', e.target.checked)}
+                            />
+                        </div>
+                        <div>
+                            <InputLabel htmlFor="math" value="math" />
+                            <Checkbox
+                                id="math"
+                                name="math"
+                                onChange={(e) => handleOptionSubject('math', e.target.checked)}
+                            />
+                        </div>
+                    </div>
                     <div>
                         <InputLabel htmlFor="present_address" value="Present address" />
                         <TextInput
