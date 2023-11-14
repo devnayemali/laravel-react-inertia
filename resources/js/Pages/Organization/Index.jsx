@@ -7,11 +7,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { Inertia } from '@inertiajs/inertia';
+import { InertiaLink } from '@inertiajs/inertia-react';
+import Pagination from '@/Components/Pagination';
 
 const Index = () => {
 
     const [query, setQuery] = useState('');
-    const { organizations, flash } = usePage().props;
+    const { pageOrganizations, flash } = usePage().props;
+    const { data: organizations, links } = pageOrganizations;
+
 
     useEffect(() => {
         if (flash.message) {
@@ -44,10 +48,13 @@ const Index = () => {
                 preserveState: true
             });
         }
-        if (query != ''){
+        if (query != '') {
             search();
         }
     }, [query]);
+
+
+    console.log(pageOrganizations);
 
     return (
         <div className="py-12 max-w-2xl mx-auto">
@@ -89,12 +96,17 @@ const Index = () => {
                             <td className="border border-slate-600 p-4">
                                 <Link href={route('organizations.edit', item.id)}>Edit</Link>
                                 {' | '}
-                                <button onClick={() => handleDelete(item.id)}>Delete</button>
+                                <button onClick={() => handleDelete(item.links.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+
+            <div>
+                <Pagination links={links} />
+            </div>
+
         </div>
     );
 };

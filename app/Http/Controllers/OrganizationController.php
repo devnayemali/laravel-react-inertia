@@ -16,8 +16,20 @@ class OrganizationController extends Controller
     {
         $search = $request->input('search');
 
+        $organizations = Organization::query()
+            ->when($search, fn ($query) => $query
+            ->where('name', 'LIKE', "%{$search}%"))
+            ->orWhere('category', 'LIKE', "%{$search}%")
+            ->paginate(10);
+
+        // $organizations = Organization::query()->paginate(10);
+        // $links = Organization::paginate(10)->links()->toArray();
+        
+
+        // dd($organizations);
+
         return Inertia::render('Organization/Index', [
-            'organizations' => Organization::query()->when($search, fn ($query) => $query->where('name', 'LIKE', "%{$search}%"))->get()
+            'pageOrganizations' => $organizations,
         ]);
     }
 
@@ -49,7 +61,7 @@ class OrganizationController extends Controller
     public function store(organizationRequest $request)
     {
         $input = $request->validated();
-       
+
         $dataArray = array(
             'name' => $input['name'],
             'location' => $input['location'],
@@ -60,7 +72,7 @@ class OrganizationController extends Controller
         );
 
         Organization::create($dataArray);
-        
+
         return redirect()->route('organizations.index')->with('message', 'Organization created successfully.');
     }
 
@@ -86,10 +98,10 @@ class OrganizationController extends Controller
      * Update the specified resource in storage.
      */
     public function update(organizationRequest $request, $id)
-{
-    $input = $request->validated();
+    {
+        $input = $request->validated();
 
-       
+
         $dataArray = array(
             'name' => $input['name'],
             'location' => $input['location'],
@@ -99,11 +111,11 @@ class OrganizationController extends Controller
             'category' => $input['category'],
         );
 
-    $organization = Organization::findOrFail($id);  
+        $organization = Organization::findOrFail($id);
 
-    $organization->update($dataArray);
-    return redirect()->route('organizations.index')->with('message', 'Organization updated successfully.');
-}
+        $organization->update($dataArray);
+        return redirect()->route('organizations.index')->with('message', 'Organization updated successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -112,13 +124,11 @@ class OrganizationController extends Controller
     {
         $organization = Organization::findOrFail($id);
 
-    if (!$organization) {
-        return redirect()->route('organizations.index')->with('message', 'Organization not found.');
+        if (!$organization) {
+            return redirect()->route('organizations.index')->with('message', 'Organization not found.');
+        }
+
+        $organization->delete();
+        return redirect()->route('organizations.index')->with('message', 'Organization deleted successfully.');
     }
-
-    $organization->delete();
-    return redirect()->route('organizations.index')->with('message', 'Organization deleted successfully.');
-
-    }
-
 }
